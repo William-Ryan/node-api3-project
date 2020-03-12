@@ -38,8 +38,15 @@ router.get('/', (req, res) => {
   })
 });
 
-router.get('/:id', (req, res) => {
-  // do your magic!
+router.get('/:id', validateUserId, (req, res) => {
+  User.getById(req.params.id)
+  .then(user => {
+    res.status(200).json(user)
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({ message: 'Error retrieving the user.' })
+  })
 });
 
 router.get('/:id/posts', (req, res) => {
