@@ -16,8 +16,15 @@ router.post('/', validateUser, (req, res) => {
   })
 });
 
-router.post('/:id/posts', (req, res) => {
-  // do your magic!
+router.post('/:id/posts', validatePost, (req, res) => {
+  Post.insert(req.body)
+  .then(userPost => {
+    res.status(201).json(userPost)
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({ message: 'Error adding the post.' })
+  })
 });
 
 router.get('/', (req, res) => {
