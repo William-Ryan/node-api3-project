@@ -50,11 +50,31 @@ router.get('/:id', validateUserId, (req, res) => {
 });
 
 router.get('/:id/posts', (req, res) => {
-  // do your magic!
+  Post.getById(req.params.id)
+  .then(posts => {
+    res.status(200).json(posts)
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({ message: 'Error retrieving the posts.' })
+  })
 });
 
-router.delete('/:id', (req, res) => {
-  // do your magic!
+router.delete('/:id', validateUserId, (req, res) => {
+  User.remove(req.params.id)
+  .then(count => {
+    if (count > 0) {
+      res.status(200).json({ message: 'The user has been nuked' });
+    } else {
+      res.status(404).json({ message: 'The user could not be found' });
+    }
+  })
+  .catch(error => {
+    console.log(error);
+    res.status(500).json({
+      message: 'Error removing the user',
+    });
+  });
 });
 
 router.put('/:id', (req, res) => {
