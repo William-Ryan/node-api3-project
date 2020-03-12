@@ -9,8 +9,8 @@ router.get('/', (req, res, next) => {
     .catch(next)
 });
 
-router.get('/:id', (req, res) => {
-  // do your magic!
+router.get('/:id', validatePostId(), (req, res) => {
+  res.status(200).json(req.post)
 });
 
 router.delete('/:id', (req, res) => {
@@ -23,8 +23,9 @@ router.put('/:id', (req, res) => {
 
 // custom middleware
 
-function validatePostId(req, res, next){
-  posts.getById(req.params.id)
+function validatePostId(){
+  return (req, res, next) => {
+  Posts.getById(req.params.id)
     .then(post => {
       if(post) {
         req.post = post
@@ -36,5 +37,7 @@ function validatePostId(req, res, next){
       }
     })
     .catch(next)
+  }
 }
+
 module.exports = router;
