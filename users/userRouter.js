@@ -5,8 +5,15 @@ const Post = require("../posts/postDb.js")
 
 const router = express.Router();
 
-router.post('/', (req, res) => {
-  // do your magic!
+router.post('/', validateUser, (req, res) => {
+  User.insert(req.body)
+  .then(user => {
+    res.status(201).json(user)
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({ message: 'Error adding the user.' })
+  })
 });
 
 router.post('/:id/posts', (req, res) => {
@@ -14,7 +21,14 @@ router.post('/:id/posts', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-  // do your magic!
+  User.get()
+  .then(users => {
+    res.status(200).json(users)
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({ message: 'Error retrieving the users.' })
+  })
 });
 
 router.get('/:id', (req, res) => {
